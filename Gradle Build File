@@ -1,0 +1,45 @@
+plugins {
+    // Plugins estándar
+    id 'java'
+    id 'application'
+    
+    // NUEVO: Plugin para el soporte de JavaFX. Usaremos la versión 0.0.13.
+    id 'org.openjfx.javafxplugin' version '0.0.13' 
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+// Configuración de JavaFX
+def javaFxVersion = '17' // Versión de JavaFX
+javafx {
+    version = javaFxVersion
+    // Módulos necesarios: 'controls' para LineChart y 'fxml' (opcional pero común)
+    modules = [ 'javafx.controls', 'javafx.fxml' ] 
+}
+
+// Configuración de la clase principal
+application {
+    // Asegúrate de que esta clase apunte a tu archivo principal.
+    mainClass = 'org.example.Main' 
+}
+
+dependencies {
+    // Yahoo Finance API (Mantenido para el contexto del curso)
+    implementation 'com.yahoofinance-api:YahooFinanceAPI:3.17.0'
+
+    // SLF4J NOP (para limpiar la salida de la consola)
+    implementation 'org.slf4j:slf4j-nop:1.7.36'
+
+    // Dependencias de prueba
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+}
+
+test {
+    useJUnitPlatform()
+}
