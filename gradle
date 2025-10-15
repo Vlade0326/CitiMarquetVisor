@@ -1,0 +1,11 @@
+dependencies {
+    // ... (otras líneas existentes)
+
+    // 1. DEPENDENCIA DE YAHOO FINANCE (CRUCIAL PARA LA TAREA)
+    implementation 'com.yahoofinance-api:YahooFinanceAPI:3.17.0'
+
+    // 2. DEPENDENCIA PARA ELIMINAR ADVERTENCIAS SLF4J (OPCIONAL, PERO RECOMENDADO)
+    implementation 'org.slf4j:slf4j-nop:1.7.36' 
+
+    // ... (resto de dependencias, como las de testing)
+}
