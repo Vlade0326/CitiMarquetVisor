@@ -1,1 +1,151 @@
 
+package org.example;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.stage.Stage;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+// Estas importaciones se mantienen para la estructura de la tarea original, aunque no se usan directamente con la simulación.
+import yahoofinance.YahooFinance;
+import yahoofinance.Stock;
+
+
+/**
+ * Aplicación de Monitoreo de Mercado que consulta (simula) y visualiza
+ * el precio del Promedio Industrial Dow Jones (DJIA) usando JavaFX.
+ */
+public class Main extends Application {
+
+    // Símbolo de cotización
+    private static final String DJIA_TICKER = "^DJI";
+
+    // Formato para la hora, usado en el eje X
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
+    // Lista observable que contendrá los datos (Timestamp String, Price Number)
+    // El gráfico se enlaza automáticamente a esta lista.
+    private final ObservableList<XYChart.Data<String, Number>> seriesData = FXCollections.observableArrayList();
+    
+    // Servicio de ejecución programada
+    private ScheduledExecutorService scheduler;
+
+    // --- MÉTODO START (Requerido por JavaFX) ---
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Citi Market Monitor - DJIA Real-Time Price");
+
+        // 1. CONFIGURACIÓN DEL GRÁFICO (Ejes X y Y)
+        final CategoryAxis xAxis = new CategoryAxis(); // Eje X para las marcas de tiempo (categorías)
+        final NumberAxis yAxis = new NumberAxis();    // Eje Y para el precio (números)
+        xAxis.setLabel("Timestamp");
+        yAxis.setLabel("Price (USD)");
+
+        // 2. CREACIÓN DEL GRÁFICO DE LÍNEAS
+        final LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setTitle("Dow Jones Industrial Average (^DJI) Price Feed");
+        lineChart.setLegendVisible(false); // Ocultar leyenda de la serie
+
+        // 3. CREACIÓN Y ENLACE DE LA SERIE DE DATOS
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("DJIA Price");
+        
+        // El gráfico se actualiza automáticamente cuando seriesData cambia
+        series.setData(seriesData);
+        lineChart.getData().add(series);
+
+        // 4. CONFIGURACIÓN DE LA ESCENA Y VENTANA
+        Scene scene = new Scene(lineChart, 800, 600);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // 5. INICIAR LA TAREA DE CONSULTA/SIMULACIÓN
+        startDataFetching();
+    }
+    
+    // --- LÓGICA DE CONSULTA DE DATOS CONCURRENTE ---
+    private void startDataFetching() {
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        // Tarea que simula la consulta del precio
+        Runnable dataFetcher = () -> {
+            try {
+                // *** SIMULACIÓN DE DATOS para evitar el bloqueo 429 ***
+                
+                // Generar un precio simulado (entre 37000.00 y 39000.00)
+                double simulatedPriceValue = 37000 + Math.random() * 2000;
+                
+                // Usar BigDecimal con precisión
+                BigDecimal price = new BigDecimal(simulatedPriceValue)
+                                            .setScale(2, RoundingMode.HALF_UP);
+                
+                Date timestamp = new Date();
+                String timestampString = timeFormat.format(timestamp);
+                
+                // *** FIN DE SIMULACIÓN ***
+
+                // Importante: Las actualizaciones de UI (gráfico) DEBEN ir en el hilo de JavaFX.
+                Platform.runLater(() -> {
+                    // Añadir el nuevo punto de dato al listado observable
+                    seriesData.add(new XYChart.Data<>(timestampString, price));
+                    
+                    // Límite de puntos para evitar que el gráfico crezca indefinidamente
+                    if (seriesData.size() > 50) {
+                        seriesData.remove(0); // Elimina el punto más antiguo (FIFO)
+                    }
+                    
+                    System.out.println("Dato añadido y gráfico actualizado: " + timestampString + " @ " + price);
+                });
+
+            } catch (Exception e) {
+                 System.err.println("Error al obtener/simular datos: " + e.getMessage());
+            }
+        };
+
+        // 6. PROGRAMAR TAREA: Ejecutar la tarea inmediatamente (0) y luego cada 5 segundos
+        scheduler.scheduleAtFixedRate(dataFetcher, 0, 5, TimeUnit.SECONDS);
+    }
+
+    // Asegurarse de detener el planificador cuando la aplicación se cierre
+    @Override
+    public void stop() {
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdownNow();
+            System.out.println("Servicio de consulta de datos detenido.");
+        }
+    }
+
+    // --- MÉTODO MAIN: Punto de entrada (solo lanza la aplicación JavaFX) ---
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+```
+***
+
+## Pasos Finales (Ejecución)
+
+Después de reemplazar los contenidos de ambos archivos, sigue los pasos 4, 5 y 6:
+
+1.  **Sincronizar Gradle:** En IntelliJ, haz clic en el botón **"Load Gradle Changes"** (o en el ícono de actualización en el panel de Gradle) para descargar las librerías de JavaFX.
+2.  **Compilar (Paso 4):**
+    ```bash
+    gradle build
+    ```
+3.  **Ejecutar (Paso 5):**
+    ```bash
+    gradle run
+    
