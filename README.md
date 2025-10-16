@@ -1,88 +1,101 @@
-📊 Citi Market Monitor: Visualización de Precios Bursátiles en Tiempo Real
-Este proyecto fue desarrollado como parte de un programa de simulación de tareas para Citi, demostrando la implementación de concurrencia, APIs de terceros (simuladas) y visualización de datos en tiempo real mediante JavaFX.
+📊 Citi Market Monitor: Real-Time Stock Price Visualization
 
-🎯 Objetivo del Proyecto
-El objetivo principal es crear una herramienta de bajo conocimiento técnico que permita a los empleados de Citi monitorear el precio de un índice bursátil clave (el Promedio Industrial Dow Jones, ^DJI) en tiempo real.
+This project was developed as part of a simulation task program for Citi, demonstrating the implementation of concurrency, third-party APIs (simulated), and real-time data visualization using JavaFX.
 
-El proyecto cumple dos funciones esenciales:
+🎯 Project Goal
 
-Concurrencia: Consultar el precio de las acciones en un intervalo fijo (5 segundos) sin bloquear el hilo de la aplicación principal, utilizando ScheduledExecutorService.
+The main objective is to create a low-technical-knowledge tool that allows Citi employees to monitor the price of a key stock index (the Dow Jones Industrial Average, ^DJI) in real-time.
 
-Visualización: Mostrar los datos históricos y actualizados en un gráfico de líneas dinámico, facilitando la monitorización del riesgo.
+The project fulfills two essential functions:
 
-🏗️ Arquitectura y Tecnologías
-El proyecto está construido sobre la plataforma Java y utiliza las siguientes tecnologías:
+Concurrency: Query the stock price at a fixed interval (5 seconds) without blocking the application's main thread, using the ScheduledExecutorService.
 
-Lenguaje: Java
+Visualization: Display historical and updated data on a dynamic line chart, facilitating real-time risk monitoring.
 
-Sistema de Construcción: Gradle
+🏗️ Architecture and Technologies
 
-Visualización (UI): JavaFX
+The project is built on the Java platform and utilizes the following technologies:
 
-Concurrencia: ScheduledExecutorService (para tareas en segundo plano)
+Language: Java
 
-API de Datos: yahoofinance-api (Se usa simulación de datos para evitar bloqueos por límites de tasa, HTTP 429).
+Build System: Gradle
 
-Estructura de Componentes Clave
-Componente
+Visualization (UI): JavaFX
 
-Función
+Concurrency: ScheduledExecutorService (for background tasks)
 
-Tecnología Clave
+Data API: yahoofinance-api (Data simulation is used to avoid rate limiting blocks, HTTP 429).
+
+Key Component Structure
+
+Component
+
+Function
+
+Key Technology
 
 Main.java
 
-Lógica Principal, Inicialización de UI y Ejecución Concurrente.
+Core Logic, UI Initialization, and Concurrent Execution.
 
 JavaFX Application
 
 dataFetcher
 
-Tarea que consulta (simula) el precio y lo almacena.
+Task that queries (simulates) the price and stores it.
 
 ScheduledExecutorService
 
-Gráfico
+Chart
 
-Muestra el precio vs. el tiempo.
+Displays price vs. time.
 
 JavaFX LineChart
 
 build.gradle
 
-Gestión de dependencias y módulos JavaFX.
+Manages dependencies and JavaFX modules.
 
 Gradle
 
-🚀 Guía de Instalación y Ejecución
-Sigue estos pasos para construir y ejecutar el monitor bursátil.
+🚀 Installation and Execution Guide
 
-Requisitos Previos
-JDK 17 o superior
+Follow these steps to build and run the stock monitor.
 
-Gradle (Generalmente incluido en IDEs como IntelliJ IDEA o VS Code)
+Prerequisites
 
-Pasos para Ejecutar
-Clonar el Repositorio:
+JDK 17 or higher
+
+Gradle (Generally included in IDEs like IntelliJ IDEA or VS Code)
+
+Steps to Run
+
+Clone the Repository:
 
 git clone [https://aws.amazon.com/es/what-is/repo/](https://aws.amazon.com/es/what-is/repo/)
 cd CitiMarketMonitor
 
-Sincronizar Dependencias:
-Asegúrate de que IntelliJ o tu IDE haya sincronizado las dependencias después de abrir el proyecto, o ejecuta:
+
+Synchronize Dependencies:
+Ensure IntelliJ or your IDE has synchronized dependencies after opening the project, or run:
 
 gradle clean
 gradle build
 
-Ejecutar la Aplicación:
-Ejecuta el proyecto utilizando la tarea run de Gradle. Esto lanzará la ventana de JavaFX.
+
+Execute the Application:
+Run the project using the Gradle run task. This will launch the JavaFX window.
 
 gradle run
 
-Comportamiento Esperado
-Una ventana emergente con el título "Citi Market Monitor - DJIA Real-Time Price" aparecerá. El gráfico de líneas se actualizará automáticamente cada 5 segundos con un nuevo punto de precio simulado, mostrando el monitoreo en tiempo real. La consola de la terminal también registrará cada punto de dato añadido a la cola.
 
-🛠️ Notas de Desarrollo
-Simulación de Datos: Para evitar los errores persistentes de HTTP 429 (Too Many Requests) impuestos por el servidor de Yahoo Finance, la consulta de la API original fue reemplazada por un generador de precios aleatorios (BigDecimal) dentro del mismo hilo. Esto garantiza que el componente de visualización de datos en tiempo real funcione sin interrupciones, cumpliendo el requisito funcional de la tarea.
+Expected Behavior
 
-Hilos de UI: La lógica de actualización del gráfico usa Platform.runLater() para garantizar que los cambios de la interfaz de usuario se realicen de forma segura desde el hilo del ScheduledExecutorService.
+A pop-up window titled "Citi Market Monitor - DJIA Real-Time Price" will appear. The line chart will automatically update every 5 seconds with a new simulated price point, displaying real-time monitoring. The terminal console will also log each data point added to the queue.
+
+🛠️ Development Notes
+
+Data Simulation: To avoid the persistent HTTP 429 (Too Many Requests) errors imposed by the Yahoo Finance server, the original API call was replaced with a random price generator (BigDecimal) within the same thread. This ensures that the real-time data visualization component functions without interruption, fulfilling the functional requirement of the task.
+
+UI Threads: The chart update logic uses Platform.runLater() to ensure that user interface changes are safely executed from the ScheduledExecutorService thread.
+
