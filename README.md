@@ -4,7 +4,7 @@ This project was developed as part of a simulation task program for Citi, demons
 
 🎯 Project Goal
 
-The main objective is to create a low-technical-knowledge tool that allows Citi employees to monitor the price of a key stock index (the Dow Jones Industrial Average, ^DJI) in real-time.
+The main objective is to create a low-technical-knowledge tool that allows Citi employees to monitor the price of a key stock index (the Dow Jones Industrial Average, (DJI) in real-time.
 
 The project fulfills two essential functions:
 
